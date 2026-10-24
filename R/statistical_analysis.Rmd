@@ -1,0 +1,47 @@
+---
+title: "Titanic Survival: Statistical Analysis in R"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE, dpi=300)
+set.seed(42); library(tidyverse); library(broom); library(car)
+d <- read.csv('../titanic.csv') |> mutate(Survived=factor(Survived),Sex=factor(Sex),Pclass=factor(Pclass),FamilySize=SibSp+Parch+1)
+```
+
+## Research question
+
+Which observed passenger characteristics are associated with survival after adjustment for measured covariates? Exponentiated coefficients are adjusted odds ratios, not causal effects.
+
+## Descriptive analysis
+
+```{r descriptive}
+d |> count(Sex,Survived) |> group_by(Sex) |> mutate(proportion=n/sum(n))
+ggplot(d,aes(Sex,as.numeric(as.character(Survived)),fill=Sex))+stat_summary(fun=mean,geom='bar')+labs(y='Survival proportion')
+```
+
+## Logistic regression, interaction, VIF, and likelihood ratio test
+
+```{r model}
+fit <- glm(Survived~Sex+Pclass+Age+Fare+SibSp+Parch+Embarked+Sex:Pclass,data=d,family=binomial(),na.action=na.omit)
+tidy(fit,conf.int=TRUE,exponentiate=TRUE)
+car::vif(fit); anova(update(fit,.~1),fit,test='LRT'); AIC(fit); BIC(fit)
+```
+
+## Calibration and residual diagnostics
+
+```{r calibration}
+cal <- d |> filter(complete.cases(model.frame(fit))) |> mutate(pred=fitted(fit),bin=ntile(pred,10)) |> group_by(bin) |> summarise(pred=mean(pred),observed=mean(as.numeric(Survived)-1),n=n())
+ggplot(cal,aes(pred,observed,size=n))+geom_point()+geom_abline(linetype=2)+coord_equal()
+plot(fit)
+```
+
+## Bootstrap uncertainty
+
+The bootstrap estimates empirical sampling variability; it does not remove confounding or measurement error.
+
+```{r bootstrap}
+set.seed(42)
+or <- replicate(500,{ x<-d[sample.int(nrow(d),replace=TRUE),]; exp(coef(glm(Survived~Sex+Pclass+Age+Fare,data=x,family=binomial(),na.action=na.omit))[2]) })
+quantile(or,c(.025,.5,.975),na.rm=TRUE)
+```

@@ -1,0 +1,13 @@
+# Run from repository root: Rscript R/statistical_analysis.R
+set.seed(42)
+if (!requireNamespace('ggplot2',quietly=TRUE)) stop('Install packages listed in renv/README.md')
+library(ggplot2); library(dplyr); library(broom); library(car)
+dir.create('figures/statistics',recursive=TRUE,showWarnings=FALSE); dir.create('results',showWarnings=FALSE)
+d <- read.csv('titanic.csv') |> mutate(Survived=factor(Survived),Sex=factor(Sex),Pclass=factor(Pclass),FamilySize=SibSp+Parch+1,IsAlone=FamilySize==1)
+fit <- glm(Survived~Sex+Pclass+Age+Fare+SibSp+Parch+Embarked+Sex:Pclass,data=d,family=binomial(),na.action=na.omit)
+write.csv(tidy(fit,conf.int=TRUE,exponentiate=TRUE),'results/r_odds_ratios.csv',row.names=FALSE)
+write.csv(as.data.frame(vif(fit)),'results/r_vif.csv'); write.csv(as.data.frame(anova(update(fit,.~1),fit,test='LRT')),'results/r_likelihood_ratio.csv')
+write.csv(data.frame(AIC=AIC(fit),BIC=BIC(fit),deviance=deviance(fit),n=nobs(fit)),'results/r_model_fit.csv',row.names=FALSE)
+p <- ggplot(d,aes(Sex,as.numeric(as.character(Survived)),fill=Sex))+stat_summary(fun=mean,geom='bar')+theme_minimal(base_size=14)+labs(y='Observed survival proportion',title='Survival by sex')
+ggsave('figures/statistics/r_survival_by_sex.png',p,width=8,height=5,dpi=300)
+png('figures/statistics/r_residual_diagnostics.png',width=1800,height=1200,res=300); par(mfrow=c(2,2)); plot(fit); dev.off()

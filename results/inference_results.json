@@ -1,0 +1,11 @@
+[
+  {
+    "sex_chi2":260.7170201673,
+    "sex_p":1.197357063e-58,
+    "risk_difference":0.553130071,
+    "risk_difference_ci_low":0.4937906368,
+    "risk_difference_ci_high":0.6104608451,
+    "age_mann_whitney_p":0.1604925248,
+    "age_rank_biserial":0.0617761874
+  }
+]
