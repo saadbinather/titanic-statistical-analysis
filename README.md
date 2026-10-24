@@ -1,8 +1,8 @@
-# Titanic Survival Detector — Research-Grade EDA
+# Titanic Survival Detector — EDA
 
 An executable, statistically grounded investigation of survival patterns in the Titanic passenger manifest. The repository preserves the original `model.py` demonstration while adding a reproducible notebook-based research workflow.
 
-## Research scope
+## Scope
 
 The notebooks investigate:
 
@@ -17,7 +17,7 @@ The notebooks investigate:
 
 The central discipline is interpretive: associations are not presented as causal effects, and predictive importance is not treated as a mechanism.
 
-## Repository structure
+##  Structure
 
 ```text
 .
@@ -105,7 +105,7 @@ Run the R analysis from the repository root:
 Rscript R/statistical_analysis.R
 ```
 
-Generated artifacts are written to `figures/eda/`, `figures/statistics/`, `figures/modeling/`, `figures/bias_variance/`, and `results/`. The Python pipeline was executed successfully in the repository's `.venv`: it processed 891 rows, converged in 6,286 gradient-descent iterations, and produced 8 300-DPI figures. Verified held-out Logistic Regression results were ROC-AUC 0.8501, average precision 0.7946, and Brier score 0.1474. The sex-survival chi-square test returned p < 1.3 × 10⁻⁵⁸, with a bootstrap risk-difference interval of [0.494, 0.610]. These are descriptive/predictive results for this dataset, not causal estimates. R is not installed in the current environment, so the R script and R Markdown have not been executed here.
+Generated artifacts are written to `figures/eda/`, `figures/statistics/`, `figures/modeling/`, `figures/bias_variance/`, and `results/`. The current execution environment did not include R or the Python scientific stack, so no unverified numerical results are included in this README.
 
 ## License
 
