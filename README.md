@@ -4,7 +4,7 @@ An executable, statistically grounded investigation of survival patterns in the 
 
 ## Scope
 
-The notebooks investigate:
+The NBs investigate:
 
 - data provenance, schema quality, duplicates, target imbalance, and missingness;
 - missing-data patterns and evidence relevant to the MCAR assumption;
@@ -41,7 +41,7 @@ python -m pip install -r requirements.txt
 jupyter lab
 ```
 
-Run the notebooks in numerical order. Each notebook locates `titanic.csv` from the repository root when launched from `notebooks/` or the root directory. Random seeds are fixed where stochastic procedures are used.
+
 
 ## Notebook narrative
 
@@ -57,18 +57,15 @@ Turns prominent visual patterns into explicit null hypotheses. It reports effect
 
 Estimates out-of-sample predictive performance with preprocessing contained inside cross-validation folds. It reports several metrics, held-out diagnostics, permutation importance, family-size engineering, and PCA visualization. Explanations are model-conditional and not causal.
 
-## Key analytical safeguards
-
-- `Survived` is never used in preprocessing or feature construction.
-- Imputation, scaling, and one-hot encoding are fitted within each training fold.
-- Class imbalance is addressed through metrics and model configuration rather than accuracy alone.
-- Fare is treated as skewed; robust rank-based tests supplement visual summaries.
-- Correlated predictors are not assigned independent causal interpretations.
-- Historical, observational data limits transportability and causal claims.
-
 ## Dataset
 
-The included CSV contains `PassengerId`, `Survived`, `Pclass`, `Name`, `Sex`, `Age`, `SibSp`, `Parch`, `Ticket`, `Fare`, `Cabin`, and `Embarked`. `Survived` is binary: `0` means did not survive and `1` means survived.
+**Source:** [Titanic — Machine Learning from Disaster (Kaggle)](https://www.kaggle.com/competitions/titanic/data)
+
+The dataset contains passenger information such as `PassengerId`, `Pclass`, `Name`, `Sex`, `Age`, `Fare`, `Cabin`, and `Embarked`, along with other features.
+
+**Target Variable:** `Survived`
+- `0` = Did not survive
+- `1` = Survived
 
 ## Original script
 
@@ -84,7 +81,7 @@ It produces introductory plots and compares Logistic Regression with Random Fore
 
 This is an observational historical dataset with recording artifacts, missingness, selection effects, and limited population coverage. Results describe this sample and should not be interpreted as universal claims about survival, fairness, or modern emergency response.
 
-## Extended statistical research layer
+## Extended statistical  layer
 
 The repository also includes a dual-language research pipeline:
 
@@ -105,7 +102,7 @@ Run the R analysis from the repository root:
 Rscript R/statistical_analysis.R
 ```
 
-Generated artifacts are written to `figures/eda/`, `figures/statistics/`, `figures/modeling/`, `figures/bias_variance/`, and `results/`. The current execution environment did not include R or the Python scientific stack, so no unverified numerical results are included in this README.
+
 
 ## License
 
